@@ -879,3 +879,34 @@ footer a:hover {
 /* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
 @media only screen and (max-width: 479px) { }
 
+.sideBarHead{
+	text-align:center;
+	background-color: #2879d0;
+	border: 1px solid #2879d0; 
+	height:40px;
+	line-height: 40px;
+	color:#FFF;
+	font-weight: bolder;
+	font-size: 20px;
+	border-top-left-radius:5px;
+	border-top-right-radius:5px;
+}
+
+.sideBarBody{
+	height:25px;
+	line-height: 25px;
+	color:#333;
+	border-left: 1px solid #2879d0; 
+	border-right: 1px solid #2879d0; 
+	padding:5px 10px;
+}
+
+.sideBarFooter{
+	height:10px;
+	border-left: 1px solid #2879d0; 
+	border-right: 1px solid #2879d0; 
+	border-bottom: 1px solid #2879d0; 
+	margin-bottom: 25px;
+	border-bottom-left-radius:5px;
+	border-bottom-right-radius:5px;
+}
