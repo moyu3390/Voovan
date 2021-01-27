@@ -64,7 +64,7 @@ public class TcpSocket extends SocketContext<SocketChannel, TcpSession> {
 	 * @param port		监听端口
 	 * @param idleInterval	空闲事件触发时间, 单位: 秒
 	 * @param readTimeout   超时时间, 单位: 毫秒
-	 * @param sendTimeout 发超时时间, 单位: 毫秒
+	 * @param sendTimeout 发超时时间, 大于0阻赛发送, 小于等于0异步发送, 单位: 毫秒
 	 * @throws IOException	IO异常
 	 */
 	public TcpSocket(String host, int port, int readTimeout, int sendTimeout, int idleInterval) throws IOException{

@@ -302,15 +302,25 @@ public class SocketSelector implements Closeable {
 				if (channel.isOpen() && selectedKey.isValid()) {
 					// 事件分发,包含时间 onRead onAccept
 					// Server接受连接
-					if((selectedKey.readyOps() & SelectionKey.OP_ACCEPT) != 0) {
+					if(selectedKey.isValid() && (selectedKey.readyOps() & SelectionKey.OP_ACCEPT) != 0) {
 						SocketChannel socketChannel = ((ServerSocketChannel) channel).accept();
 						tcpAccept((TcpServerSocket) socketContext, socketChannel);
 					}
 
 					// 有数据读取
-					if ((selectedKey.readyOps() & SelectionKey.OP_READ) != 0) {
+					if (selectedKey.isValid() && (selectedKey.readyOps() & SelectionKey.OP_READ) != 0) {
 						socketContext.updateLastTime();
 						readFromChannel(socketContext, channel);
+					}
+
+					// 有数据读取
+					if (selectedKey.isValid() && (selectedKey.readyOps() & SelectionKey.OP_WRITE) != 0) {
+						NioUtil.removeOps(selectedKey, SelectionKey.OP_WRITE);
+						try {
+							writeToChannel(socketContext, socketContext.getSession().sendByteBufferChannel.getByteBuffer());
+						} finally {
+							socketContext.getSession().sendByteBufferChannel.compact();
+						}
 					}
 				}
 				ret = true;
@@ -441,7 +451,7 @@ public class SocketSelector implements Closeable {
 			try {
 				while (buffer.remaining() != 0) {
 					int sendSize = socketContext.socketChannel().write(buffer);
-					if (sendSize == 0) {
+					if (socketContext.getSendTimeout() > 0 && sendSize == 0) {
 						if (System.currentTimeMillis() - start >= socketContext.getSendTimeout()) {
 							Logger.error("SocketSelector tcpWriteToChannel timeout", new TimeoutException());
 							socketContext.close();
@@ -550,7 +560,7 @@ public class SocketSelector implements Closeable {
 						sendSize = datagramChannel.send(buffer, session.getInetSocketAddress());
 					}
 
-					if (sendSize == 0) {
+					if (socketContext.getSendTimeout() > 0 && sendSize == 0) {
 						if (System.currentTimeMillis() - start >= socketContext.getSendTimeout()) {
 							Logger.error("SocketSelector udpWriteToChannel timeout, Socket will be close");
 							socketContext.close();

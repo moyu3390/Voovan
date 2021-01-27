@@ -467,7 +467,12 @@ public abstract class IoSession<T extends SocketContext> extends Attributes {
 	 */
 	protected int send0(ByteBuffer buffer) {
 		if(socketSelector != null) {
-		return socketSelector.writeToChannel(socketContext, buffer);
+			if(socketContext.getSendTimeout() <= 0) {
+				NioUtil.addOps(this.selectionKey, SelectionKey.OP_WRITE);
+				return buffer.limit();
+			} else {
+				return socketSelector.writeToChannel(socketContext, buffer);
+			}
 		} else {
 			return -1;
 		}

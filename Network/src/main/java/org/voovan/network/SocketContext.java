@@ -112,7 +112,7 @@ public abstract class SocketContext<C extends SelectableChannel, S extends IoSes
 	protected String host;
 	protected int port;
 	protected int readTimeout;
-	protected int sendTimeout = 1000;
+	protected int sendTimeout = 0;
 
 	protected IoHandler handler;
 	protected Chain<IoFilter> filterChain;
@@ -162,7 +162,7 @@ public abstract class SocketContext<C extends SelectableChannel, S extends IoSes
 	 * @param host    主机地址
 	 * @param port    主机端口
 	 * @param readTimeout 读超时时间, 单位: 毫秒
-	 * @param sendTimeout 发超时时间, 单位: 毫秒
+	 * @param sendTimeout 发超时时间, 大于0阻赛发送, 小于等于0异步发送, 单位: 毫秒
 	 * @param idleInterval 空闲事件触发时间
 	 */
 	public SocketContext(String host,int port,int readTimeout, int sendTimeout, int idleInterval) {

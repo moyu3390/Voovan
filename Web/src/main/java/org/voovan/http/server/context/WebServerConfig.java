@@ -31,7 +31,7 @@ public class WebServerConfig {
     private String host                     = "0.0.0.0";
     private int port                        = 28080;
     private int readTimeout                 = 30;
-    private int sendTimeout                 = 30;
+    private int sendTimeout                 = 0;
     private String contextPath              = "WEBAPP";
     private boolean MatchRouteIgnoreCase    = false;
     private String characterSet             = "UTF-8";
